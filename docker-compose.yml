@@ -1,0 +1,80 @@
+version: "2"
+services:
+  coordinator:
+    image: ddb
+    ports:
+      - "5555:5555"
+    environment:
+      - CLUSTER_NAME=ddb
+      - RING_SIZE=8
+    labels:
+      - "net.project-fifo.ddb.cluster.name=ddb"
+##    volumes:
+##      - schemas:/etc/riak/schemas
+  db:
+    image: ddb
+    ports:
+      - "5555"
+    labels:
+      - "net.project-fifo.ddb.cluster.name=ddb"
+    links:
+      - coordinator
+    depends_on:
+      - coordinator
+    environment:
+      - CLUSTER_NAME=ddb
+      - COORDINATOR_NODE=coordinator
+      - RING_SIZE=8
+  pg:
+    image: metric_metadata
+  fe:
+    image: dfe
+    ports:
+      - "8080:8080"
+    labels:
+      - "net.project-fifo.dfe.cluster.name=ddb"
+    links:
+      - coordinator
+      - db
+      - pg
+    depends_on:
+      - coordinator
+      - db
+      - pg
+    environment:
+      - CLUSTER_NAME=ddb
+      - COORDINATOR_NODE=coordinator
+      - DB_NODE=db
+      - PG_NODE=pg
+  grafana:
+    image: grafana_ddb
+    ports:
+      - "3000:3000"
+    links:
+      - fe
+    depends_on:
+      - fe
+    environment:
+      - GF_PATHS_PLUGINS=/plugins
+  proxy:
+    image: ddb_proxy
+    ports:
+      - "8086:8086"
+      - "2003:2003"
+      - "4242:4242"
+      - "9999:9999"
+      - "1234:1234"
+    labels:
+      - "net.project-fifo.dfe.cluster.name=ddb"
+    links:
+      - coordinator
+      - db
+      - pg
+    depends_on:
+      - coordinator
+      - db
+      - pg
+    environment:
+      - CLUSTER_NAME=ddb
+      - DB_NODE=db
+      - PG_NODE=pg
