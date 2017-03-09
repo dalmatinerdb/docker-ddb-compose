@@ -1,7 +1,7 @@
 version: "2"
 services:
   coordinator:
-    image: ddb
+    image: projectfifo/ddb
     ports:
       - "5555:5555"
     environment:
@@ -12,7 +12,7 @@ services:
 ##    volumes:
 ##      - schemas:/etc/riak/schemas
   db:
-    image: ddb
+    image: projectfifo/ddb
     ports:
       - "5555"
     labels:
@@ -26,9 +26,9 @@ services:
       - COORDINATOR_NODE=coordinator
       - RING_SIZE=8
   pg:
-    image: metric_metadata
+    image: projectfifo/metric_metadata
   fe:
-    image: dfe
+    image: projectfifo/dfe
     ports:
       - "8080:8080"
     labels:
@@ -47,7 +47,7 @@ services:
       - DB_NODE=db
       - PG_NODE=pg
   grafana:
-    image: grafana_ddb
+    image: projectfifo/grafana
     ports:
       - "3000:3000"
     links:
@@ -57,7 +57,7 @@ services:
     environment:
       - GF_PATHS_PLUGINS=/plugins
   proxy:
-    image: ddb_proxy
+    image: projectfifo/ddb_proxy
     ports:
       - "8086:8086"
       - "2003:2003"

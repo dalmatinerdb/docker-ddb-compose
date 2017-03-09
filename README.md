@@ -3,6 +3,10 @@
 
 This compose file is meant as a quick way to try out and play with DalmainterDB, not as a production deployment!
 
+# Get it done
+
+To just get it started, you need docker installed, clone this repository and run `docker-compose up`.
+
 # Provided Features
  
 ## Ingres
@@ -36,3 +40,7 @@ There are two primary ways to get data out of DalmatinerDB
 This compose file comes with a Grafana container with the DalmatinerDB plugin pre-installed. It is however required to still add the datasource.
 
 Go to [Grafana](http://localhost:3000) and log in with `admin` / `admin`. Go to `Datasrouces` and add a `DalmatinerDB` datasource with `http://fe:8080/` as a URL in `proxy` mode.
+
+# Getting Data
+
+The quickest way to get some data to display is to use [telegraf](https://docs.influxdata.com/telegraf/v1.2/) and point it to `http://localhost:8086` (default for new installations).
