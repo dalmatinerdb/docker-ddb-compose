@@ -7,10 +7,9 @@ services:
     environment:
       - CLUSTER_NAME=ddb
       - RING_SIZE=8
+      - BUCKETS=InfluxDB 1s 1d 1d 30s;graphite 1s 1d 1d 30s;syslog 1s 1d 1d 30s;promwriter 1s 1d 1d 30s
     labels:
       - "net.project-fifo.ddb.cluster.name=ddb"
-##    volumes:
-##      - schemas:/etc/riak/schemas
   db:
     image: projectfifo/ddb
     ports:
